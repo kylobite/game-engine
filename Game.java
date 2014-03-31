@@ -17,6 +17,7 @@ public class Game extends Canvas implements Runnable {
 
     private Thread thread;
     private JFrame frame;
+    private Screen screen;
 
     private BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
     private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
@@ -29,7 +30,8 @@ public class Game extends Canvas implements Runnable {
         setMinimumSize(size);
         setMaximumSize(size);
 
-        frame = new JFrame();
+        screen = new Screen(width, height);
+        frame  = new JFrame();
     }
 
     private synchronized void start() {
@@ -66,7 +68,7 @@ public class Game extends Canvas implements Runnable {
         }
 
         Graphics g = bs.getDrawGraphics();
-        g.setColor(new Color(0x708090));
+        g.setColor(new Color(0x708090)); // Deal with it
         g.fillRect(0, 0, getWidth(), getHeight());
         g.dispose();
         bs.show();
