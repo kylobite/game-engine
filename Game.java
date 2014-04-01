@@ -51,10 +51,35 @@ public class Game extends Canvas implements Runnable {
     }
 
     public void run() {
+        long lastTime   = System.nanoTime();
+        long timer      = System.currentTimeMillis();
+        final double ns = 1000000000.0 / 60.0;
+        double delta    = 0;
+        int frames      = 0;
+        int updates     = 0;
+
         while (running) {
-            update();
+            long now = System.nanoTime();
+            delta   += (now - lastTime) / ns;
+            lastTime = now;
+
+            while (delta >= 1) {
+                update();
+                updates++;
+                delta--;
+            }
+
             render();
+            frames++;
+
+            if (System.currentTimeMillis() - timer > 1000) {
+                timer  += 1000;
+                frame.setTitle("KGEv0.1 :: " + updates + " ups, " + frames + " fps");
+                frames  = 0;
+                updates = 0;
+            }
         }
+        stop();
     }
 
     public void update() {
@@ -67,6 +92,7 @@ public class Game extends Canvas implements Runnable {
             return;
         }
 
+        screen.clear();
         screen.render();
 
         for (int i = 0; i < pixels.length; i++) {
@@ -82,7 +108,6 @@ public class Game extends Canvas implements Runnable {
     public static void main(String[] args) {
         Game game = new Game();
         game.frame.setResizable(false);
-        game.frame.setTitle("KGEv0.1 :: Kylobite's Game Engine Version 0.1");
         game.frame.add(game);
         game.frame.pack();
         game.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
