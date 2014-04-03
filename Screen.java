@@ -7,7 +7,7 @@ public class Screen {
 
     public static int TILE_SIZE     = 16;
     public static int MAP_SIZE      = 8;
-    public static int MAP_SIZE_MASK = 8;
+    public static int MAP_SIZE_MASK = MAP_SIZE - 1;
 
     public int[] pixels;
     public int[] tiles = new int[MAP_SIZE * MAP_SIZE];
@@ -39,7 +39,7 @@ public class Screen {
             for (int x = 0; x < width; x++) {
                 int xx = x + xOffset;
                 // if (xx < 0 || xx >= width) continue;
-                int tileIndex = ((xx >> ts) & mm) + (((yy >> mm) & rs) << ms);
+                int tileIndex = ((xx >> ts) & mm) + (((yy >> ts) & mm) << ms);
 
                 pixels[x + y * width] = tiles[tileIndex];
             }

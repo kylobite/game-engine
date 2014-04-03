@@ -18,6 +18,7 @@ public class Game extends Canvas implements Runnable {
     private Thread thread;
     private JFrame frame;
     private Screen screen;
+    private Keyboard key;
 
     private BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
     private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
@@ -32,6 +33,9 @@ public class Game extends Canvas implements Runnable {
 
         screen = new Screen(width, height);
         frame  = new JFrame();
+        key    = new Keyboard();
+
+        addKeyListener(key);
     }
 
     private synchronized void start() {
@@ -85,6 +89,8 @@ public class Game extends Canvas implements Runnable {
     int xTemp = 0, yTemp = 0;
 
     public void update() {
+        key.update();
+        
         xTemp++;
         yTemp++;
     }
