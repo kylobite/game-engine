@@ -5,18 +5,19 @@ public class Screen {
     private int width, height;
     private Random random = new Random();
 
-    public static int tileSize = 4;
-    public static int mapSize  = 64;
+    public static int TILE_SIZE     = 16;
+    public static int MAP_SIZE      = 8;
+    public static int MAP_SIZE_MASK = 8;
 
     public int[] pixels;
-    public int[] tiles = new int[mapSize * mapSize];
+    public int[] tiles = new int[MAP_SIZE * MAP_SIZE];
 
     public Screen(int width, int height) {
         this.width  = width;
         this.height = height;
         this.pixels = new int[width * height];
 
-        for (int i = 0; i < mapSize * mapSize; i++) {
+        for (int i = 0; i < MAP_SIZE * MAP_SIZE; i++) {
             tiles[i] = random.nextInt(0xffffff);
         }
     }
@@ -27,13 +28,19 @@ public class Screen {
         }
     }
 
-    public void render() {
-        int ms = (int)(Math.round(Math.log(mapSize) / Math.log(2)));
+    public void render(int xOffset, int yOffset) {
+        int ts = (int)(Math.round(Math.log(TILE_SIZE) / Math.log(2)));
+        int ms = (int)(Math.round(Math.log(MAP_SIZE) / Math.log(2)));
+        int mm = MAP_SIZE_MASK;
+
         for (int y = 0; y < height; y++) {
-            if (y < 0 || y >= height) continue;
+            int yy = y + yOffset;
+            // if (yy < 0 || yy >= height) continue;
             for (int x = 0; x < width; x++) {
-                if (x < 0 || x >= width) continue;
-                int tileIndex = (x >> tileSize) + ((y >> tileSize) << ms);
+                int xx = x + xOffset;
+                // if (xx < 0 || xx >= width) continue;
+                int tileIndex = ((xx >> ts) & mm) + (((yy >> mm) & rs) << ms);
+
                 pixels[x + y * width] = tiles[tileIndex];
             }
         }
